@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações de Parâmetros</title>
+    <!-- Bootstrap CSS (Minty Theme) -->
+    <link href="https://stackpath.bootstrap.com/bootswatch/4.5.2/minty/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1>Configurações de Parâmetros</h1>
+
+    <!-- Formulário de Cadastro de Parâmetros -->
+    <form id="parametros-form">
+        <div class="form-group">
+            <label for="parametro-nome">Nome do Parâmetro:</label>
+            <input type="text" id="parametro-nome" class="form-control" placeholder="Ex: Taxa de Juros Mensal">
+        </div>
+
+        <div class="form-group">
+            <label for="parametro-valor">Valor:</label>
+            <input type="text" id="parametro-valor" class="form-control" placeholder="Ex: 0.0237">
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="salvarParametro()">Salvar Parâmetro</button>
+    </form>
+
+    <hr>
+
+    <!-- Tabela de Parâmetros Salvos -->
+    <h2>Parâmetros Salvos</h2>
+    <table class="table table-bordered" id="parametros-table">
+        <thead>
+            <tr>
+                <th>Nome do Parâmetro</th>
+                <th>Valor</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Parâmetros serão listados aqui -->
+        </tbody>
+    </table>
+
+    <!-- Link para voltar ao simulador -->
+    <a href="index.html" class="btn btn-secondary">Voltar ao Simulador</a>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.cloudflare.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    // Funções JavaScript para salvar, listar e excluir parâmetros
+    function salvarParametro() {
+        const nome = document.getElementById('parametro-nome').value;
+        const valor = document.getElementById('parametro-valor').value;
+
+        if (nome && valor) {
+            localStorage.setItem(nome, valor);
+            listarParametros();
+            document.getElementById('parametro-nome').value = '';
+            document.getElementById('parametro-valor').value = '';
+        } else {
+            alert('Por favor, preencha ambos os campos.');
+        }
+    }
+
+    function listarParametros() {
+        const tabela = document.getElementById('parametros-table').getElementsByTagName('tbody')[0];
+        tabela.innerHTML = '';
+
+        for (let i = 0; i < localStorage.length; i++) {
+            const nome = localStorage.key(i);
+            const valor = localStorage.getItem(nome);
+
+            const linha = `<tr>
+                <td>${nome}</td>
+                <td>${valor}</td>
+                <td><button class="btn btn-danger" onclick="deletarParametro('${nome}')">Excluir</button></td>
+            </tr>`;
+            tabela.innerHTML += linha;
+        }
+    }
+
+    function deletarParametro(nome) {
+        localStorage.removeItem(nome);
+        listarParametros();
+    }
+
+    // Carrega os parâmetros ao iniciar a página
+    document.addEventListener('DOMContentLoaded', listarParametros);
+</script>
+
+</body>
+</html>
